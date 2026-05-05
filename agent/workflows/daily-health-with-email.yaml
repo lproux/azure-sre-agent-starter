@@ -1,0 +1,46 @@
+# ============================================================================
+# Workflow: Daily Health Check with Email Report
+# Purpose: Proactive monitoring + automated reporting
+# Components: Scheduled Task → Custom Agent → Outlook Connector
+# ============================================================================
+
+name: daily-health-with-email
+description: |
+  Automated daily health check that investigates infrastructure health
+  and emails a professional summary report to the SRE team.
+
+# Architecture:
+#
+#   ┌──────────────┐     ┌──────────────────┐     ┌──────────────────┐
+#   │  Scheduled    │────►│  health-reporter  │────►│  SendOutlookEmail│
+#   │  Task (8AM)   │     │  (custom agent)   │     │  (connector)     │
+#   └──────────────┘     └──────────────────┘     └──────────────────┘
+
+# Setup Steps:
+#
+# 1. Create the health-reporter custom agent:
+#    Builder > Agent Canvas > Create > Custom Agent
+#    Name: health-reporter
+#    Instructions: "You are a health monitoring specialist. Check resource
+#    health, error rates, latency, capacity, and certificates. Format findings
+#    as a professional HTML report suitable for email."
+#    Tools: RunAzCliReadCommands, QueryApplicationInsights, QueryLogAnalytics,
+#           AzureMonitorMetrics, SendOutlookEmail
+#
+# 2. Connect Outlook:
+#    Builder > Connectors > Add "Send email (Office 365 Outlook)"
+#
+# 3. Create Scheduled Task:
+#    Scheduled Tasks > Create
+#    Name: Daily Health Report
+#    Schedule: Daily at 08:00
+#    Response Agent: health-reporter
+#    Mode: Autonomous
+#    Instructions: (paste from scheduled-tasks/daily-health-check.yaml)
+#    Add: "After completing the health check, email the report to
+#    sre-team@[your-domain] using SendOutlookEmail with subject
+#    'Daily Health Report — [DATE]'. Format as professional HTML."
+#
+# 4. Test with "Run task now":
+#    Select the task > "..." menu > Run now
+#    Verify the investigation runs and email is sent

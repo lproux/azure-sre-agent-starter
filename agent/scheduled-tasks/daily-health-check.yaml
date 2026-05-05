@@ -1,0 +1,39 @@
+# ============================================================================
+# Scheduled Task: Daily Health Check
+# Schedule: Every day at 08:00 UTC
+# Agent: Main agent (no custom agent needed)
+# Mode: Autonomous
+# Setup: Scheduled Tasks tab > Create scheduled task
+# ============================================================================
+
+name: daily-health-check
+description: Daily infrastructure health review across all production resources
+schedule: "Daily at 08:00 UTC"
+# Cron equivalent: 0 8 * * *
+
+agent_autonomy_level: Autonomous
+message_grouping: new_thread  # Fresh thread each day for clean history
+
+instructions: |
+  Perform a comprehensive daily health check:
+
+  1. **Resource Health**: Query Azure Resource Health for any degraded or unavailable
+     resources across all production resource groups (rg-prod-*).
+
+  2. **Error Rate Check**: Query Application Insights for error rates in the last 24 hours.
+     Flag any endpoint with error rate > 1%. Compare to 7-day average.
+
+  3. **Performance Check**: Query P95 latency for all API endpoints.
+     Flag any endpoint where P95 increased > 20% vs 7-day average.
+
+  4. **Container Health**: Check AKS for pod restarts > 3 in last 24 hours,
+     nodes with resource pressure, and pending pods.
+
+  5. **Certificate Check**: List any certificates expiring within 30 days
+     from Key Vault and App Service bindings.
+
+  6. **Capacity Check**: Flag any resource with CPU > 80% average or
+     storage > 85% utilization over the last 24 hours.
+
+  Summarize findings in a table with: Resource, Issue, Severity, Recommendation.
+  If all checks pass, report "All systems healthy" with key metrics.

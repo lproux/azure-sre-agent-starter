@@ -1,0 +1,33 @@
+// ============================================================================
+// Kusto Tool: Error Log Analyzer
+// Purpose: Find and categorize application errors from the last N hours
+// Setup: Builder > Agent Canvas > Create > Tool > Kusto Tool
+// Connector: Application Insights or Log Analytics
+// Parameters: timeRange (e.g., "1h", "24h"), severity (e.g., "Error", "Critical")
+// ============================================================================
+
+// Tool Name: error-log-analyzer
+// Description: Analyzes application errors by category, frequency, and impact.
+//              Use when investigating error spikes or identifying top error patterns.
+
+AppExceptions
+| where TimeGenerated > ago(##timeRange##)
+| where SeverityLevel >= 3  // Error and above
+| summarize
+    Count = count(),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated),
+    AffectedUsers = dcount(user_Id),
+    SampleMessage = take_any(outerMessage)
+  by ProblemId, outerType, innermostType
+| order by Count desc
+| take 25
+| project
+    ErrorType = outerType,
+    InnerType = innermostType,
+    Occurrences = Count,
+    AffectedUsers,
+    FirstSeen,
+    LastSeen,
+    DurationMinutes = datetime_diff('minute', LastSeen, FirstSeen),
+    SampleMessage

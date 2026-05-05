@@ -1,0 +1,36 @@
+# ============================================================================
+# Scheduled Task: Weekly SLA Report
+# Schedule: Every Friday at 16:00 UTC
+# Agent: Main agent with Outlook connector
+# Mode: Autonomous
+# ============================================================================
+
+name: weekly-sla-report
+description: Generate and email weekly SLA compliance report
+schedule: "Every Friday at 16:00 UTC"
+
+agent_autonomy_level: Autonomous
+message_grouping: new_thread
+
+instructions: |
+  Generate the weekly SLA compliance report:
+
+  1. **Availability**: Calculate uptime percentage for each production service
+     over the past 7 days using Azure Monitor availability metrics.
+     Target: 99.9% for P0 services, 99.5% for P1 services.
+
+  2. **Latency**: Report P50, P95, P99 latency for each API endpoint.
+     Compare to SLA targets (P95 < 500ms for APIs, P95 < 2000ms for pages).
+
+  3. **Incident Summary**: Count incidents by severity for the week.
+     Include MTTR for each resolved incident.
+
+  4. **Error Budget**: Calculate remaining error budget for each service
+     for the current month. Flag services that consumed > 50% of budget.
+
+  5. **Trends**: Compare this week's metrics to last week.
+     Highlight improving and degrading services.
+
+  Format as a professional HTML report table.
+  Email to sre-team@[your-domain] using the Outlook connector with subject:
+  "Weekly SLA Report — Week of [DATE]"

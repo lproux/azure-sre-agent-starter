@@ -1,0 +1,43 @@
+# ============================================================================
+# Connector: Datadog (Monitoring via MCP)
+# Type: MCP Server connector
+# Setup: Builder > Connectors > + Add connector > MCP Server
+# ============================================================================
+
+name: datadog-mcp
+type: mcp_server
+category: Telemetry
+
+# Setup Steps:
+# 1. Go to Builder > Connectors > + Add connector
+# 2. Select "MCP Server" as connector type
+# 3. Configuration:
+#    - Name: datadog
+#    - Connection type: Streamable-HTTP
+#    - URL: https://mcp.datadoghq.com/sse  (check Datadog docs for current URL)
+#    - Authentication: API Key header
+#      - Header name: DD-API-KEY
+#      - Header value: <your-datadog-api-key>
+# 4. Click Add
+# 5. After "Connected" status, click Edit to select tools
+# 6. Select relevant tools (metrics, logs, monitors)
+# 7. Save
+
+# What this connector provides:
+#   - Query Datadog metrics alongside Azure Monitor
+#   - Search Datadog logs for cross-platform correlation
+#   - Check Datadog monitor status
+#   - Bridge Azure and Datadog observability
+
+# MCP Tools (typical):
+#   - datadog_query_metrics
+#   - datadog_search_logs
+#   - datadog_list_monitors
+#   - datadog_get_monitor_details
+
+# Custom agent assignment:
+# mcp_tools:
+#   - datadog/*  # All Datadog tools via wildcard
+
+# Note: Verify the MCP server URL at https://mcp.azure.com or Datadog documentation
+# Health monitoring: 60-second heartbeat, auto-recovery from transient failures

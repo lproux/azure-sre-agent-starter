@@ -1,0 +1,60 @@
+# ============================================================================
+# Workflow: Incident to Resolution (End-to-End)
+# Purpose: Demonstrates full automated incident handling pipeline
+# Components: Incident Platform → Triage Agent → Specialist Agent → Notification
+# ============================================================================
+
+name: incident-to-resolution
+description: |
+  End-to-end incident automation: alert fires → agent triages → specialist
+  investigates → fix proposed/applied → team notified → knowledge captured.
+
+# Architecture:
+#
+#   ┌─────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+#   │ Incident Platform│────►│  incident-triage  │────►│   Specialist     │
+#   │ (PagerDuty/Azure)│     │  (classify+route) │     │  (investigate)   │
+#   └─────────────────┘     └──────────────────┘     └────────┬─────────┘
+#                                                              │
+#                                                     ┌───────▼────────┐
+#                                                     │  Execute Fix    │
+#                                                     │ (Review/Auto)   │
+#                                                     └───────┬────────┘
+#                                                              │
+#                                                     ┌───────▼────────┐
+#                                                     │   Notify Team   │
+#                                                     │ (Teams/Outlook) │
+#                                                     └───────┬────────┘
+#                                                              │
+#                                                     ┌───────▼────────┐
+#                                                     │ Capture Learning│
+#                                                     │ (Auto 30min)    │
+#                                                     └────────────────┘
+
+# Setup Steps:
+#
+# 1. Connect Incident Platform:
+#    Builder > Incident Platform > Connect PagerDuty or Azure Monitor
+#
+# 2. Create Custom Agents:
+#    Builder > Agent Canvas > Create each specialist from agent/custom-agents/*.yaml
+#
+# 3. Create Response Plans:
+#    Builder > Incident Response Plans > Create from agent/incident-response/*.yaml
+#
+# 4. Connect Notification Channels:
+#    Builder > Connectors > Add Teams and/or Outlook connectors
+#
+# 5. Test:
+#    Agent Canvas > Test Playground > Simulate an incident
+#
+# Flow Example:
+#   Alert: "P1 — Database connection timeout on postgres-primary"
+#   → incident-triage classifies as SEV1, database domain
+#   → Handoff to database-expert
+#   → database-expert runs diagnostics, finds connection pool exhaustion
+#   → Proposes: restart affected pods + increase pool size
+#   → Human approves (Review mode)
+#   → Agent executes kubectl restart + config update
+#   → Posts summary to Teams #incidents
+#   → 30 min later: session insight captures root cause + resolution

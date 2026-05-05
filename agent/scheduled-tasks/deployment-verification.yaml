@@ -1,0 +1,34 @@
+# ============================================================================
+# Scheduled Task: Deployment Verification
+# Schedule: Every 30 minutes (continuous)
+# Agent: deployment-analyzer
+# Mode: Autonomous
+# ============================================================================
+
+name: deployment-verification
+description: Continuous post-deployment health monitoring
+schedule: "Every 30 minutes"
+
+response_agent: deployment-analyzer
+agent_autonomy_level: Autonomous
+message_grouping: same_thread  # Updates go to same thread within the day
+
+instructions: |
+  Check for recent deployments and verify their health:
+
+  1. Check Container App revisions created in the last 30 minutes.
+  2. Check AKS deployments with rollout changes in the last 30 minutes.
+  3. Check App Service deployment slots swapped in the last 30 minutes.
+
+  For each new deployment found:
+  - Compare error rate to 30-minute pre-deployment baseline
+  - Compare P95 latency to pre-deployment baseline
+  - Check for new exception types in Application Insights
+  - Verify health endpoints return 200
+
+  If no deployments found, skip silently (don't report "no deployments").
+
+  If regression detected:
+  - Severity: flag as 🔴 if error rate > 5x baseline, 🟡 if > 2x
+  - Include specific commands to rollback
+  - Tag the thread for on-call attention

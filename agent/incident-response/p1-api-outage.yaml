@@ -1,0 +1,33 @@
+# ============================================================================
+# Incident Response Plan: P1 API Outage
+# Trigger: API service outage or major error rate spike
+# Handler: incident-triage → deployment-analyzer (handoff chain)
+# Mode: Review
+# Setup: Builder > Incident Response Plans > New
+# ============================================================================
+
+name: p1-api-outage
+description: Handles API outages with triage, deployment correlation, and rollback
+
+filter:
+  severity:
+    - P1
+    - Sev0
+    - Sev1
+  impacted_service: "api-gateway, app-service-prod, container-app-api"
+  title_contains: "503, 502, outage, down, unavailable, error rate"
+
+response_agent: incident-triage  # Triage first, then handoff to specialist
+agent_autonomy_level: Review
+
+reinvestigation_cooldown:
+  enabled: true
+  cooldown_hours: 2
+
+# Triage → Specialist handoff chain:
+# 1. incident-triage receives the alert
+# 2. Classifies: is this deployment-related? infra? network?
+# 3. If deployment-correlated → handoff to deployment-analyzer
+# 4. deployment-analyzer checks recent deploys, compares error baselines
+# 5. Proposes rollback or identifies root cause
+# 6. Human approves rollback command

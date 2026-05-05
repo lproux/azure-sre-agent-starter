@@ -1,0 +1,28 @@
+# ============================================================================
+# Connector: Azure DevOps (Source Code, Wiki, Work Items)
+# Type: OAuth-based connector
+# Setup: Builder > Connectors > + Add connector > Azure DevOps
+# ============================================================================
+
+name: azure-devops
+type: source_code
+category: Code Repository
+
+# Setup Steps:
+# 1. Go to Builder > Connectors > + Add connector
+# 2. Select "Azure DevOps" (OAuth)
+# 3. Complete OAuth sign-in with your Azure DevOps account
+# 4. Select the organization and projects to connect
+# 5. Click Save
+
+# For Wiki/Documentation indexing:
+# 1. Add a separate "Documentation (Azure DevOps)" connector
+# 2. This indexes your ADO wiki pages for searchable knowledge
+# 3. Agent can then reference wiki content during investigations
+
+# What this connector provides:
+#   - Repository code search
+#   - Wiki page search and content
+#   - Work item tracking (bugs, tasks)
+#   - Pipeline/build history
+#   - Pull request details

@@ -1,0 +1,43 @@
+# ============================================================================
+# Connector: PagerDuty (Incident Management)
+# Type: Incident Platform
+# Setup: Builder > Incident Platform > Connect > PagerDuty
+# ============================================================================
+
+name: pagerduty
+type: incident_platform
+category: Incident Management
+
+# IMPORTANT: Only ONE incident platform can be active at a time.
+# Connecting PagerDuty disconnects Azure Monitor alerts (and vice versa).
+
+# Setup Steps:
+# 1. Go to Builder > Incident Platform
+# 2. Select "PagerDuty"
+# 3. Enter your PagerDuty API key (Events API v2)
+# 4. Select the PagerDuty service(s) to monitor
+# 5. Enable "Quickstart response plan" for automatic P1 handling
+# 6. Click Connect
+
+# PagerDuty API Key Generation:
+# 1. Log in to PagerDuty > Integrations > API Access Keys
+# 2. Create a new API key with read/write access
+# 3. Copy the key — it's shown only once
+
+# What this connector provides:
+#   - Automatic incident reception when PagerDuty alerts fire
+#   - Rich incident cards in chat (severity, status, description)
+#   - Agent can acknowledge, add notes, and resolve incidents
+#   - Response plans route specific incident types to custom agents
+
+# Quickstart Response Plan (auto-created):
+#   - Matches: P1 incidents
+#   - Handler: Default agent
+#   - Mode: Autonomous
+#   - Customize via Builder > Incident Response Plans
+
+# Available tools:
+#   - pagerduty_acknowledge_incident
+#   - pagerduty_resolve_incident
+#   - pagerduty_add_note
+#   - pagerduty_get_incident

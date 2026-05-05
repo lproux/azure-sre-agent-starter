@@ -1,0 +1,29 @@
+# ============================================================================
+# Scheduled Task: Cost Anomaly Detection
+# Schedule: Every day at 09:00 UTC
+# Agent: cost-optimizer
+# Mode: Autonomous
+# ============================================================================
+
+name: cost-anomaly-detection
+description: Daily Azure spend anomaly detection comparing against baselines
+schedule: "Daily at 09:00 UTC"
+
+response_agent: cost-optimizer
+agent_autonomy_level: Autonomous
+message_grouping: new_thread
+
+instructions: |
+  Analyze Azure cost data for anomalies:
+
+  1. Compare today's spending rate to the 7-day moving average for each resource group.
+  2. Flag any resource group where spending increased more than 20% day-over-day.
+  3. Identify any new resources created in the last 24 hours that are generating cost.
+  4. Check for idle resources: VMs with < 5% CPU average over the last 7 days.
+  5. Report total month-to-date spend vs. budget forecast.
+
+  Present findings as:
+  - 🔴 ANOMALY: Spend increases > 50%
+  - 🟡 WARNING: Spend increases 20-50%
+  - 🟢 SAVINGS: Idle resources that could be deleted/downsized
+  - Total estimated monthly savings from quick wins

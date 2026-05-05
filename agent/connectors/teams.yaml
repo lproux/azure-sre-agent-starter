@@ -1,0 +1,38 @@
+# ============================================================================
+# Connector: Microsoft Teams (Notifications)
+# Type: Collaboration connector
+# Setup: Builder > Connectors > + Add connector > Send notification (Teams)
+# ============================================================================
+
+name: teams
+type: notification
+category: Notification
+
+# Setup Steps:
+# 1. Go to Builder > Connectors > + Add connector
+# 2. Select "Send notification (Teams)"
+# 3. Sign in with your Microsoft account (OAuth consent)
+# 4. Select the Teams channel for notifications
+# 5. Click Save
+
+# What this connector provides:
+#   - Post investigation summaries to Teams channels
+#   - Reply to existing threads (keeps incidents organized)
+#   - Read recent channel messages for context
+#   - "Sent by Azure SRE Agent" footer with portal link
+
+# Available tools:
+#   - SendTeamsMessage: Post to configured channel
+#   - ReplyToTeamsMessage: Reply to existing thread
+#   - GetTeamsMessages: Read recent messages
+
+# Best practices:
+#   - Use a dedicated #incidents channel for automated posts
+#   - Enable "Sent by Azure SRE Agent" footer (default)
+#   - Assign SendTeamsMessage to incident-triage custom agent
+#   - Use scheduled tasks for daily digest posts
+
+# Footer configuration:
+#   - Enabled by default
+#   - Disable: Builder > Connectors > Edit > uncheck footer option
+#   - Includes UTC timestamp and "View thread" portal link

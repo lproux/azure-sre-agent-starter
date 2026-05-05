@@ -1,0 +1,22 @@
+# ============================================================================
+# Incident Response Plan: P2 Performance Degradation
+# Trigger: Latency spikes or throughput drops
+# Handler: incident-triage
+# Mode: Review
+# ============================================================================
+
+name: p2-performance-degradation
+description: Investigates performance degradation with baseline comparison
+
+filter:
+  severity:
+    - P2
+    - Sev2
+  title_contains: "slow, latency, timeout, performance, degraded, throughput"
+
+response_agent: incident-triage
+agent_autonomy_level: Review
+
+reinvestigation_cooldown:
+  enabled: true
+  cooldown_hours: 4

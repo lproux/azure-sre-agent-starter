@@ -1,0 +1,39 @@
+# ============================================================================
+# Connector: GitHub (Source Code & Knowledge)
+# Type: OAuth-based connector
+# Setup: Builder > Connectors > + Add connector > GitHub
+# ============================================================================
+# Documentation: https://learn.microsoft.com/azure/sre-agent/connect-source-code
+
+name: github
+type: source_code
+category: Code Repository
+
+# Setup Steps:
+# 1. Go to Builder > Connectors > + Add connector
+# 2. Select "GitHub" from the connector list
+# 3. Click "Sign in with GitHub" — complete OAuth consent
+# 4. Select the repositories your agent should access
+# 5. Click Save
+
+# What this connector provides:
+#   - Search code across repositories for error patterns
+#   - Read wiki documentation during investigations
+#   - Reference API docs and README files
+#   - View recent PRs and commits for deployment correlation
+#   - Access GitHub Issues for known bug tracking
+
+# Available tools after connection:
+#   - github_search_code: Search for code patterns across repos
+#   - github_get_file: Read file contents from a repository
+#   - github_list_repos: List accessible repositories
+#   - github_search_issues: Search issues and PRs
+#   - github_get_commit: Get commit details
+
+# Recommended custom agent assignments:
+#   - deployment-analyzer: For deployment correlation with commits/PRs
+#   - incident-triage: For checking if issues are known bugs
+
+# YAML for custom agent tool assignment:
+# mcp_tools:
+#   - github/*  # All GitHub tools

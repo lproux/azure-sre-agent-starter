@@ -1,0 +1,47 @@
+// ============================================================================
+// Kusto Tool: Performance Baseline
+// Purpose: Establish and compare performance baselines (latency, throughput, errors)
+// Setup: Builder > Agent Canvas > Create > Tool > Kusto Tool
+// Connector: Application Insights
+// Parameters: timeRange (e.g., "1h"), baselineRange (e.g., "7d")
+// ============================================================================
+
+// Tool Name: performance-baseline
+// Description: Compares current performance metrics against a historical baseline.
+//              Use to detect performance regressions after deployments or changes.
+
+let currentStart = ago(##timeRange##);
+let baselineStart = ago(##baselineRange##);
+let baselineEnd = ago(##timeRange##);
+let current = requests
+| where timestamp > currentStart
+| summarize
+    CurrentP50 = percentile(duration, 50),
+    CurrentP95 = percentile(duration, 95),
+    CurrentP99 = percentile(duration, 99),
+    CurrentErrorRate = countif(success == false) * 100.0 / count(),
+    CurrentRPS = count() / datetime_diff('second', max(timestamp), min(timestamp)),
+    CurrentCount = count()
+| extend Period = "Current";
+let baseline = requests
+| where timestamp between (baselineStart .. baselineEnd)
+| summarize
+    BaselineP50 = percentile(duration, 50),
+    BaselineP95 = percentile(duration, 95),
+    BaselineP99 = percentile(duration, 99),
+    BaselineErrorRate = countif(success == false) * 100.0 / count(),
+    BaselineRPS = count() / datetime_diff('second', max(timestamp), min(timestamp)),
+    BaselineCount = count()
+| extend Period = "Baseline";
+current | join kind=cross baseline
+| project
+    Metric = pack_array("P50 Latency (ms)", "P95 Latency (ms)", "P99 Latency (ms)", "Error Rate (%)", "Requests/sec"),
+    Current = pack_array(round(CurrentP50, 1), round(CurrentP95, 1), round(CurrentP99, 1), round(CurrentErrorRate, 2), round(CurrentRPS, 1)),
+    Baseline = pack_array(round(BaselineP50, 1), round(BaselineP95, 1), round(BaselineP99, 1), round(BaselineErrorRate, 2), round(BaselineRPS, 1))
+| mv-expand Metric to typeof(string), Current to typeof(real), Baseline to typeof(real)
+| extend ChangePercent = round((Current - Baseline) / Baseline * 100, 1)
+| extend Status = case(
+    abs(ChangePercent) < 10, "✅ Normal",
+    ChangePercent > 50, "🔴 Critical",
+    ChangePercent > 20, "🟡 Warning",
+    "✅ Normal")

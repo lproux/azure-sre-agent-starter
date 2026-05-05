@@ -1,0 +1,37 @@
+# ============================================================================
+# Scheduled Task: Security Posture Review
+# Schedule: Every Monday at 07:00 UTC
+# Agent: security-auditor
+# Mode: Review (human reviews findings)
+# ============================================================================
+
+name: security-posture-review
+description: Weekly security scan for misconfigurations and vulnerabilities
+schedule: "Every Monday at 07:00 UTC"
+
+response_agent: security-auditor
+agent_autonomy_level: Review
+message_grouping: new_thread
+
+instructions: |
+  Perform a weekly security posture review:
+
+  1. **NSG Audit**: Check all NSGs for rules allowing 0.0.0.0/0 inbound on
+     non-standard ports. Flag any overly permissive rules.
+
+  2. **Public Endpoints**: Identify resources with public endpoints that lack
+     WAF, DDoS protection, or IP restrictions.
+
+  3. **Secret Expiry**: Check Key Vault for secrets and certificates expiring
+     within 90 days. Prioritize by criticality.
+
+  4. **RBAC Review**: List any service principals with Owner role. Flag
+     managed identity assignments that are broader than necessary.
+
+  5. **Storage Security**: Check for storage accounts with public blob access
+     enabled or without HTTPS-only enforcement.
+
+  6. **Advisor Recommendations**: Pull Azure Advisor security recommendations
+     and prioritize by impact.
+
+  Classify findings as CRITICAL, HIGH, MEDIUM, LOW with specific remediation steps.

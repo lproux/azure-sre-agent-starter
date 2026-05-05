@@ -1,0 +1,21 @@
+# ============================================================================
+# Incident Response Plan: P3 Cost Anomaly
+# Trigger: Unexpected spend increase detected by Azure Cost alerts
+# Handler: cost-optimizer
+# Mode: Autonomous (read-only investigation)
+# ============================================================================
+
+name: p3-cost-anomaly
+description: Investigates cost anomalies and identifies savings opportunities
+
+filter:
+  severity:
+    - P3
+    - Sev3
+  title_contains: "cost, spend, budget, anomaly, overspend"
+
+response_agent: cost-optimizer
+agent_autonomy_level: Autonomous  # Safe for read-only cost analysis
+
+reinvestigation_cooldown:
+  enabled: false  # Each cost alert gets fresh investigation

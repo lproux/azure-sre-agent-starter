@@ -1,0 +1,39 @@
+# ============================================================================
+# Incident Response Plan: P1 Database Critical
+# Trigger: Database outage or severe degradation
+# Handler: database-expert custom agent
+# Mode: Review (requires human approval for write actions)
+# Setup: Builder > Incident Response Plans > New
+# ============================================================================
+
+name: p1-database-critical
+description: Handles critical database incidents with specialized diagnostics
+
+# Incident Filter
+filter:
+  severity:
+    - P1
+    - Sev0
+    - Sev1
+  impacted_service: "postgres-primary, sql-prod, cosmos-prod"
+  incident_type: Default
+  title_contains: "database, SQL, Cosmos, PostgreSQL, connection pool, deadlock"
+
+# Custom Agent Handler
+response_agent: database-expert
+agent_autonomy_level: Review  # Human approval required for write actions
+
+# Alert Reinvestigation Cooldown (Azure Monitor only)
+reinvestigation_cooldown:
+  enabled: true
+  cooldown_hours: 3  # Recurring alerts merge into same thread
+
+# What happens when this plan triggers:
+# 1. Agent receives the database alert
+# 2. database-expert custom agent activates with its tools + skills
+# 3. Runs database-diagnostics skill (connection check, query analysis)
+# 4. Queries Application Insights for dependency failures
+# 5. Checks replication status and failover health
+# 6. Proposes resolution (e.g., failover, connection pool reset)
+# 7. Waits for human approval before executing write commands
+# 8. Posts summary to Teams #incidents channel

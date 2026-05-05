@@ -1,0 +1,37 @@
+# ============================================================================
+# Connector: Outlook (Email Notifications)
+# Type: Collaboration connector
+# Setup: Builder > Connectors > + Add connector > Send email (Office 365 Outlook)
+# ============================================================================
+
+name: outlook
+type: notification
+category: Notification
+
+# Setup Steps:
+# 1. Go to Builder > Connectors > + Add connector
+# 2. Select "Send email (Office 365 Outlook)"
+# 3. Sign in with your Microsoft 365 account (OAuth consent)
+# 4. Click Save
+
+# What this connector provides:
+#   - Send professional HTML-formatted investigation summaries
+#   - Reply to email threads
+#   - List inbox messages for context
+#   - Move and organize emails
+#   - Attachment support (up to 5 MB total)
+
+# Available tools:
+#   - SendOutlookEmail: Compose and send email
+#   - ReplyToOutlookEmail: Continue existing threads
+#   - GetOutlookEmail: Read specific email by ID
+#   - ListOutlookEmails: Read message metadata
+#   - MoveOutlookEmail: Organize messages
+
+# Supports shared mailboxes:
+#   - Specify optional mailbox address for send/read operations
+#   - Useful for team-shared incident notification mailbox
+
+# Recommended custom agent assignments:
+#   - health-reporter: For daily health check email digests
+#   - incident-triage: For emailing investigation summaries

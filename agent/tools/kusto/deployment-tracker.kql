@@ -1,0 +1,34 @@
+// ============================================================================
+// Kusto Tool: Deployment Tracker
+// Purpose: Correlate deployments with application health metrics
+// Setup: Builder > Agent Canvas > Create > Tool > Kusto Tool
+// Connector: Application Insights
+// Parameters: timeRange (e.g., "24h")
+// ============================================================================
+
+// Tool Name: deployment-tracker
+// Description: Tracks recent deployments and correlates them with error rate changes.
+//              Use to identify which deployment may have caused an issue.
+
+let deployments = customEvents
+| where name == "DeploymentStarted" or name contains "deployment" or name contains "release"
+| where timestamp > ago(##timeRange##)
+| project DeployTime = timestamp, DeployName = name, DeployProps = customDimensions
+| order by DeployTime desc;
+let healthBefore = requests
+| where timestamp > ago(##timeRange##)
+| summarize
+    ErrorRate = countif(success == false) * 100.0 / count(),
+    P95 = percentile(duration, 95),
+    Count = count()
+  by bin(timestamp, 5m);
+deployments
+| join kind=leftouter (healthBefore) on $left.DeployTime == $right.timestamp
+| project
+    DeployTime,
+    DeployName,
+    ErrorRateAt5min = ErrorRate,
+    LatencyP95At5min = P95,
+    RequestCount = Count
+| order by DeployTime desc
+| take 20

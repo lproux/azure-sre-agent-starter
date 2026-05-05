@@ -1,0 +1,37 @@
+# ============================================================================
+# Connector: Grafana (Dashboards & Metrics via MCP)
+# Type: MCP Server connector
+# Setup: Builder > Connectors > + Add connector > MCP Server
+# ============================================================================
+
+name: grafana-mcp
+type: mcp_server
+category: Telemetry
+
+# Setup Steps:
+# 1. Go to Builder > Connectors > + Add connector
+# 2. Select "MCP Server" as connector type
+# 3. Configuration:
+#    - Name: grafana
+#    - Connection type: Streamable-HTTP
+#    - URL: https://<your-grafana-instance>/api/mcp
+#    - Authentication: Bearer token
+#      - Token: <your-grafana-service-account-token>
+# 4. Click Add
+# 5. After "Connected" status, click Edit to select tools
+# 6. Save
+
+# Grafana Service Account Token:
+# 1. Go to Grafana > Administration > Service Accounts
+# 2. Create a service account with Viewer role
+# 3. Generate a token for the service account
+
+# What this connector provides:
+#   - Query Grafana dashboards during investigations
+#   - Access Grafana-managed data sources (Prometheus, InfluxDB, etc.)
+#   - Embed dashboard panels in investigation summaries
+#   - Cross-reference Azure metrics with Grafana data
+
+# Note: Your SRE Agent has built-in Grafana visualization support.
+# The MCP connector adds access to Grafana-managed data sources
+# that aren't directly available through Azure Monitor.

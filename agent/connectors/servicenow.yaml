@@ -1,0 +1,30 @@
+# ============================================================================
+# Connector: ServiceNow (Incident Management)
+# Type: Incident Platform (alternative to PagerDuty)
+# Setup: Builder > Incident Platform > Connect > ServiceNow
+# ============================================================================
+
+name: servicenow
+type: incident_platform
+category: Incident Management
+
+# IMPORTANT: Only ONE incident platform can be active at a time.
+
+# Setup Steps:
+# 1. Go to Builder > Incident Platform
+# 2. Select "ServiceNow"
+# 3. Enter your ServiceNow instance URL (e.g., https://yourorg.service-now.com)
+# 4. Provide authentication credentials (API key or OAuth)
+# 5. Click Connect
+
+# What this connector provides:
+#   - Automatic incident reception from ServiceNow
+#   - Rich incident cards with severity and assignment details
+#   - Agent can post discussion entries, acknowledge, resolve
+#   - Integration with CMDB for affected CI context
+
+# Available tools:
+#   - servicenow_get_incident
+#   - servicenow_acknowledge_incident
+#   - servicenow_resolve_incident
+#   - servicenow_post_discussion
