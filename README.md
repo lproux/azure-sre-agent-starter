@@ -10,7 +10,7 @@ This is not just an infrastructure deployment — it's a **complete, production-
 
 | Category | Count | What You Get |
 |----------|-------|-------------|
-| 🤖 **Custom Agents** | 6 | Database Expert, AKS Expert, Security Auditor, Deployment Analyzer, Cost Optimizer, Incident Triage |
+| 🤖 **Custom Agents** | 8 | Database Expert, AKS Expert, Security Auditor, Deployment Analyzer, Cost Optimizer, Incident Triage, **AKS Node Recovery**, **Post-Incident Reporter** |
 | 🛠️ **Skills** | 5 | AKS troubleshooting, DB diagnostics, deployment rollback, certificate renewal, cost analysis |
 | 🔧 **Custom Tools** | 8 | 4 KQL queries + 3 Python tools + 1 HTTP webhook |
 | 📚 **Knowledge Sources** | 11 | Agent memory files + 4 operational runbooks |
@@ -20,7 +20,7 @@ This is not just an infrastructure deployment — it's a **complete, production-
 | 🌐 **HTTP Triggers** | 2 | Webhook endpoints for Azure Monitor alerts + CI/CD post-deploy verification |
 | 🪝 **Hooks** | 2 | Pre-action safety check + post-action audit log |
 | 🔄 **Workflows** | 2 | End-to-end incident resolution + daily health with email |
-| 📖 **Documentation** | 4 | Setup guide, architecture diagrams, wiki, 250+ FAQ |
+| 📖 **Documentation** | 5 | Setup guide, architecture diagrams, wiki, **visual portal guide (16 screenshots)**, 250+ FAQ |
 
 ---
 
@@ -47,6 +47,11 @@ azd up
 
 ### Step 3: Configure Everything Else
 Follow the **[Complete Setup Guide](docs/SETUP-GUIDE.md)** — it walks through every capability with copy-paste configs from this repo.
+
+### 📸 Visual Portal Guide
+See the **[Visual Portal Guide](docs/VISUAL-GUIDE.md)** — a comprehensive walkthrough with **16 screenshots** from a live SRE Agent portal covering every section: Agent Canvas, Connectors, Knowledge Sources, Skill Builder, Incident Platform, Response Plans, HTTP Triggers, Plugins, Hooks, Scheduled Tasks, Tools, Skills, and Monitor.
+
+![Agent Canvas — Full Workflow Demo](docs/images/agent-canvas-full-demo.png)
 
 ---
 
