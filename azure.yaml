@@ -1,0 +1,9 @@
+# Azure Developer CLI (azd) configuration for Azure SRE Agent
+# Deploy with: azd up
+name: azure-sre-agent-starter
+metadata:
+  template: azure-sre-agent-starter@0.1.0
+infra:
+  provider: bicep
+  path: infra
+  module: main
