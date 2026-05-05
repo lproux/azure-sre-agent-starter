@@ -1,0 +1,36 @@
+# ============================================================================
+# HTTP Trigger: Post-Deployment Verification
+# Purpose: CI/CD pipeline calls this webhook after a deployment to trigger
+#          automated health verification
+# Setup: Builder > HTTP triggers > Create trigger
+# ============================================================================
+
+name: post-deploy-verification
+description: Called by CI/CD pipeline after deployment to verify health
+
+agent_autonomy_level: Autonomous
+response_agent: deployment-analyzer
+
+# Usage in GitHub Actions:
+# ```yaml
+# - name: Trigger SRE Agent verification
+#   run: |
+#     curl -X POST "${{ secrets.SRE_TRIGGER_URL }}" \
+#       -H "Content-Type: application/json" \
+#       -d '{
+#         "deployment": "${{ github.sha }}",
+#         "environment": "production",
+#         "service": "${{ github.repository }}",
+#         "deployed_by": "${{ github.actor }}"
+#       }'
+# ```
+
+instructions: |
+  A deployment just completed. Verify its health:
+  1. Parse the deployment details from the webhook payload
+  2. Compare error rates to the 30-minute pre-deployment baseline
+  3. Check P95 latency for regression (>20% increase = warning, >50% = critical)
+  4. Look for new exception types in Application Insights
+  5. Verify health endpoints return 200
+  6. If regression detected, propose rollback with specific commands
+  7. Post results to Teams #deployments channel

@@ -50,7 +50,7 @@ graph TB
     end
 
     subgraph "Knowledge"
-        KB[Knowledge Base]
+        KB[Knowledge Sources]
         MEM[Agent Memory]
         SI[Session Insights]
     end

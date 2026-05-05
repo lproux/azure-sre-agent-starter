@@ -13,10 +13,12 @@ This is not just an infrastructure deployment — it's a **complete, production-
 | 🤖 **Custom Agents** | 6 | Database Expert, AKS Expert, Security Auditor, Deployment Analyzer, Cost Optimizer, Incident Triage |
 | 🛠️ **Skills** | 5 | AKS troubleshooting, DB diagnostics, deployment rollback, certificate renewal, cost analysis |
 | 🔧 **Custom Tools** | 8 | 4 KQL queries + 3 Python tools + 1 HTTP webhook |
-| 📚 **Knowledge Base** | 11 | Agent memory files + 4 operational runbooks |
+| 📚 **Knowledge Sources** | 11 | Agent memory files + 4 operational runbooks |
 | 🔌 **Connectors** | 8 | GitHub, Azure DevOps, PagerDuty, ServiceNow, Teams, Outlook, Datadog, Grafana |
 | 🚨 **Incident Response Plans** | 4 | P1-P3 severity routing with agent handoff chains |
 | ⏰ **Scheduled Tasks** | 5 | Health checks, cost detection, security review, deploy verification, SLA reports |
+| 🌐 **HTTP Triggers** | 2 | Webhook endpoints for Azure Monitor alerts + CI/CD post-deploy verification |
+| 🪝 **Hooks** | 2 | Pre-action safety check + post-action audit log |
 | 🔄 **Workflows** | 2 | End-to-end incident resolution + daily health with email |
 | 📖 **Documentation** | 4 | Setup guide, architecture diagrams, wiki, 250+ FAQ |
 
@@ -124,6 +126,14 @@ azure-sre-agent-starter/
 │   │   ├── security-posture-review.yaml
 │   │   ├── deployment-verification.yaml
 │   │   └── weekly-sla-report.yaml
+│   │
+│   ├── http-triggers/                      #   2 HTTP webhook triggers
+│   │   ├── azure-monitor-alert-handler.yaml
+│   │   └── post-deploy-verification.yaml
+│   │
+│   ├── hooks/                              #   2 safety & governance hooks
+│   │   ├── pre-action-safety-check.yaml
+│   │   └── post-action-audit-log.yaml
 │   │
 │   └── workflows/                          #   2 end-to-end workflows
 │       ├── incident-to-resolution.yaml

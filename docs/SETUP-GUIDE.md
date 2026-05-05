@@ -12,14 +12,17 @@
 3. [Configure Custom Agents](#3-configure-custom-agents)
 4. [Create Skills](#4-create-skills)
 5. [Create Custom Tools](#5-create-custom-tools)
-6. [Upload Knowledge Base](#6-upload-knowledge-base)
+6. [Upload Knowledge Sources](#6-upload-knowledge-sources)
 7. [Connect Connectors](#7-connect-connectors)
 8. [Connect Incident Platform](#8-connect-incident-platform)
 9. [Create Incident Response Plans](#9-create-incident-response-plans)
 10. [Create Scheduled Tasks](#10-create-scheduled-tasks)
-11. [Configure Run Modes](#11-configure-run-modes)
-12. [Test in Playground](#12-test-in-playground)
-13. [Verify Everything Works](#13-verify-everything-works)
+11. [Create HTTP Triggers](#11-create-http-triggers)
+12. [Configure Hooks](#12-configure-hooks)
+13. [Browse Plugins](#13-browse-plugins)
+14. [Configure Run Modes](#14-configure-run-modes)
+15. [Test in Playground](#15-test-in-playground)
+16. [Verify Everything Works](#16-verify-everything-works)
 
 ---
 
@@ -77,7 +80,7 @@ Create each skill from the SKILL.md files in `agent/skills/`:
 
 For each skill folder (`aks-troubleshooting`, `database-diagnostics`, `deployment-rollback`, `certificate-renewal`, `cost-analysis`):
 
-1. Go to **Builder** → **Skills** → **Create Skill**
+1. Go to **Builder** → **Skill builder** → **Create Skill**
 2. Set the **Name** and **Description** (from the SKILL.md header comments)
 3. Upload the `SKILL.md` file as the skill content
 4. Under **Tools**, attach the tools mentioned in the SKILL.md header:
@@ -119,11 +122,11 @@ For each `.py` file:
 
 ---
 
-## 6. Upload Knowledge Base
+## 6. Upload Knowledge Sources
 
 ### 6a. Agent Knowledge Files (from `agent/knowledge/`)
 
-1. Go to **Settings** → **Knowledge Base** → **Files** tab
+1. Go to **Builder** → **Knowledge sources**
 2. Drag and drop all files from `agent/knowledge/`:
    - `overview.md` (loaded into every conversation)
    - `team.md`, `architecture.md`, `deployment.md`, `auth.md`, `debugging.md`, `logs.md`
@@ -219,7 +222,66 @@ Create each task from `agent/scheduled-tasks/`:
 
 ---
 
-## 11. Configure Run Modes
+## 11. Create HTTP Triggers
+
+HTTP triggers let external services invoke your agent via webhook URLs.
+
+Create triggers from `agent/http-triggers/`:
+
+1. Go to **Builder** → **HTTP triggers** → **Create trigger**
+2. Configure:
+   - **Name**: Descriptive name (e.g., "Azure Monitor Alert Handler")
+   - **Instructions**: What the agent should do when the trigger fires
+   - **Response Custom Agent** (optional): Route to a specialist
+   - **Agent Autonomy Level**: Review or Autonomous
+3. Click **Create**
+4. Copy the generated **webhook URL** — use this in your external alerting system
+
+### Example: Azure Monitor Alert Webhook
+The portal auto-creates an "Azure Monitor Alert Handler" trigger when you connect Azure Monitor as your incident platform. You can create additional triggers for:
+- Custom monitoring systems sending JSON payloads
+- CI/CD pipelines triggering post-deployment checks
+- ChatOps bots forwarding commands to the agent
+
+See `agent/http-triggers/` for example configurations.
+
+---
+
+## 12. Configure Hooks
+
+Hooks are user-defined shell commands or LLM prompts that run at specific points in the agent's execution — adding safety checks and governance controls.
+
+1. Go to **Builder** → **Hooks** → **Create hook**
+2. Configure:
+   - **Name**: Descriptive name (e.g., "pre-action-safety-check")
+   - **Hook type**: Shell command or LLM prompt
+   - **Trigger point**: When in the agent's execution flow this hook fires
+   - **Command/Prompt**: The check to perform
+3. Click **Create**
+
+### Example use cases:
+- **Pre-action check**: Verify a resource isn't in a maintenance window before restarting
+- **Post-action audit**: Log all write actions to a compliance system
+- **Approval gate**: Require additional validation for production changes
+
+See `agent/hooks/` for example configurations.
+
+---
+
+## 13. Browse Plugins
+
+Plugins are community extensions that add new skills, tools, and integrations.
+
+1. Go to **Builder** → **Plugins**
+2. Click **Add marketplace** to connect a plugin source
+3. Browse available plugins and click **Install** on ones you need
+4. Installed plugins appear in the plugin list with their status
+
+> ℹ️ The plugin marketplace is community-driven. No plugins are included by default — you add marketplace sources first, then browse and install.
+
+---
+
+## 14. Configure Run Modes
 
 Run modes are set **per response plan and per scheduled task**, not globally.
 
@@ -235,7 +297,7 @@ To change: Edit the response plan or scheduled task → Change **Agent Autonomy 
 
 ---
 
-## 12. Test in Playground
+## 15. Test in Playground
 
 1. Go to **Builder** → **Agent Canvas** → **Test playground**
 2. Select a custom agent from the dropdown
@@ -252,7 +314,7 @@ To change: Edit the response plan or scheduled task → Change **Agent Autonomy 
 
 ---
 
-## 13. Verify Everything Works
+## 16. Verify Everything Works
 
 ### Checklist
 
@@ -261,12 +323,15 @@ To change: Edit the response plan or scheduled task → Change **Agent Autonomy 
 - [ ] All 6 custom agents created in Agent Canvas
 - [ ] All 5 skills created with SKILL.md and tool attachments
 - [ ] 4 Kusto tools + 3 Python tools + 1 HTTP tool created
-- [ ] Knowledge base uploaded (7 knowledge files + 4 runbooks)
+- [ ] Knowledge sources uploaded (7 knowledge files + 4 runbooks)
 - [ ] Source code connector(s) connected (GitHub/ADO)
 - [ ] Notification connector(s) connected (Teams/Outlook)
 - [ ] Incident platform connected (Azure Monitor/PagerDuty/ServiceNow)
 - [ ] 4 incident response plans created
 - [ ] 5 scheduled tasks created and tested with "Run now"
+- [ ] HTTP triggers configured for external webhooks
+- [ ] Hooks created for safety/governance checks (optional)
+- [ ] Plugins marketplace browsed (optional)
 - [ ] Run modes configured per plan/task
 - [ ] Each custom agent tested in Playground
 

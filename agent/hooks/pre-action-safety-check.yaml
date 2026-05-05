@@ -1,0 +1,38 @@
+# ============================================================================
+# Hook: Pre-Action Safety Check
+# Purpose: Validates safety constraints before the agent executes write actions
+# Type: LLM prompt hook
+# Setup: Builder > Hooks > Create hook
+# ============================================================================
+# Hooks are user-defined checks that run at specific points in the agent's
+# execution. They add safety, governance, and compliance controls.
+
+name: pre-action-safety-check
+description: Validates that proposed write actions are safe before execution
+
+# Hook types:
+#   - Shell command: Runs a shell script and checks exit code
+#   - LLM prompt: Runs an AI evaluation of the proposed action
+
+type: llm_prompt
+trigger_point: before_write_action
+
+prompt: |
+  Review this proposed action for safety:
+
+  Action: {{proposed_action}}
+  Target Resource: {{resource_id}}
+  Environment: {{environment}}
+
+  Safety checks:
+  1. Is this a production resource? If yes, flag for extra review.
+  2. Could this action cause data loss? (e.g., delete, drop, truncate)
+  3. Could this action cause downtime? (e.g., restart, scale-to-zero)
+  4. Is this action reversible? If not, flag as high-risk.
+  5. Is there a maintenance window active for this resource?
+
+  Return ALLOW if all checks pass, or BLOCK with a reason if any check fails.
+
+# Example: Block dangerous actions
+# If the hook returns BLOCK, the agent stops and reports the safety concern.
+# If the hook returns ALLOW, the agent proceeds (subject to run mode approval).

@@ -1,0 +1,45 @@
+# ============================================================================
+# HTTP Trigger: Azure Monitor Alert Handler
+# Purpose: Webhook endpoint that receives Azure Monitor alerts and triggers
+#          agent investigation automatically
+# Setup: Builder > HTTP triggers > Create trigger
+# ============================================================================
+# This trigger is auto-created when you connect Azure Monitor as your
+# incident platform. You can create additional HTTP triggers for:
+#   - Custom monitoring systems (Datadog, Splunk webhooks)
+#   - CI/CD pipelines (post-deployment verification)
+#   - ChatOps bots (Slack/Teams commands → agent actions)
+#   - External alerting systems sending JSON payloads
+
+name: azure-monitor-alert-handler
+description: Receives Azure Monitor alerts via webhook and starts investigation
+
+# After creating the trigger in the portal, you get a webhook URL like:
+# https://<region>.azuresre.ai/api/triggers/<trigger-id>/invoke
+#
+# Configure this URL as an action in your Azure Monitor alert rules:
+#   1. Go to Azure Monitor > Alerts > Action groups
+#   2. Create or edit an action group
+#   3. Add action type: Webhook
+#   4. Paste the trigger webhook URL
+#   5. Save
+
+# Trigger settings:
+agent_autonomy_level: Autonomous
+response_agent: incident-triage  # Routes to triage first
+
+# The incoming JSON payload is passed to the agent as context.
+# Azure Monitor alert payloads include:
+#   - Alert rule name and description
+#   - Severity (Sev0-Sev4)
+#   - Affected resource ID
+#   - Signal type (Metric, Log, Activity Log)
+#   - Condition details (threshold, metric value)
+
+instructions: |
+  You received an alert via HTTP trigger. Parse the incoming alert payload:
+  1. Identify the affected resource and alert severity
+  2. Run initial diagnostics on the affected resource
+  3. Check for similar past incidents in memory
+  4. Route to the appropriate specialist custom agent based on resource type
+  5. Post findings to the Teams #incidents channel

@@ -1,0 +1,34 @@
+# ============================================================================
+# Hook: Post-Action Audit Log
+# Purpose: Logs all agent write actions to an external audit system
+# Type: Shell command hook
+# Setup: Builder > Hooks > Create hook
+# ============================================================================
+
+name: post-action-audit-log
+description: Sends audit trail of agent actions to external logging system
+
+type: shell_command
+trigger_point: after_write_action
+
+# This shell command sends an audit event after every write action.
+# Customize the endpoint URL to your audit/compliance system.
+command: |
+  curl -s -X POST "https://your-audit-system.example.com/api/events" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $AUDIT_API_KEY" \
+    -d '{
+      "source": "azure-sre-agent",
+      "action": "{{action_name}}",
+      "resource": "{{resource_id}}",
+      "user": "{{triggered_by}}",
+      "timestamp": "{{timestamp}}",
+      "result": "{{action_result}}",
+      "thread_id": "{{thread_id}}"
+    }'
+
+# Use cases:
+#   - Compliance: Track all infrastructure changes made by the agent
+#   - Audit: Maintain a record for SOC2 / ISO27001 audits
+#   - Analytics: Measure agent effectiveness over time
+#   - Alerting: Trigger notifications for specific action types
